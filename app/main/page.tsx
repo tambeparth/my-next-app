@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -46,7 +46,7 @@ interface Testimonial {
   avatar: string;
 }
 
-export default function LandingPage() {
+export default function MainPage() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [destination, setDestination] = useState("");
@@ -212,6 +212,9 @@ export default function LandingPage() {
               <Link href="/game" className="font-medium hover:text-primary transition-colors">
                 Play Game
               </Link>
+              <Link href="/reviews" className="font-medium hover:text-primary transition-colors">
+                Reviews
+              </Link>
             </nav>
 
             <div className="hidden md:flex space-x-4">
@@ -294,6 +297,13 @@ export default function LandingPage() {
                   >
                     Play Game
                   </Link>
+                  <Link
+                    href="/reviews"
+                    className="font-medium py-2 hover:text-primary transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Reviews
+                  </Link>
                 </div>
               </motion.div>
             )}
@@ -309,10 +319,13 @@ export default function LandingPage() {
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-              >
-                <Badge className="mb-4">AI-Powered Travel Planning</Badge>
+              ><Badge className="mb-4">AI-Powered Travel Planning</Badge>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                  Your Perfect Trip, <span className="text-primary">Planned by AI</span>
+                  Your Perfect Trip
+                  <br />
+                  <span className="text-primary">
+                    Planned By AI
+                  </span>
                 </h1>
                 <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-lg">
                   Let our advanced AI create personalized travel itineraries tailored to your preferences, budget, and travel style.
@@ -339,8 +352,20 @@ export default function LandingPage() {
                         }
                       }}
                     >
-                      Plan Now <ChevronRight className="ml-2 h-4 w-4" />
+                      Plan <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
+                    <Link
+                      href={`/map-view?destination=${encodeURIComponent(destination)}`}
+                      passHref
+                    >
+                      <Button
+                        variant="outline"
+                        disabled={!destination}
+                      >
+                        <MapPin className="mr-2 h-4 w-4" />
+                        View
+                      </Button>
+                    </Link>
                   </div>
 
                   {/* Destination Badges */}
@@ -402,7 +427,7 @@ export default function LandingPage() {
                           </motion.div>
                         </Link>
 
-                        <Link href={`/hotel?destination=${destination}`}>
+                        <Link href={`/hotels?destination=${destination}`}>
                           <motion.div
                             className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                             whileHover={{ x: 5 }}
@@ -419,7 +444,7 @@ export default function LandingPage() {
                           </motion.div>
                         </Link>
 
-                        <Link href={`/atrraction?destination=${destination}`}>
+                        <Link href={`/attraction?destination=${destination}`}>
                           <motion.div
                             className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                             whileHover={{ x: 5 }}
@@ -436,7 +461,7 @@ export default function LandingPage() {
                           </motion.div>
                         </Link>
 
-                        <Link href={`/attractions?destination=${destination}`}>
+                        <Link href={`/attraction?destination=${destination}`}>
                           <motion.div
                             className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                             whileHover={{ x: 5 }}
@@ -785,7 +810,7 @@ export default function LandingPage() {
               </p>
 
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Button size="lg" variant="secondary">
+                <Button size="lg" variant="default">
                   Start Planning for Free
                 </Button>
                 <Button size="lg" variant="outline" className="bg-transparent text-black border-black hover:bg-white/10">
@@ -904,3 +929,7 @@ export default function LandingPage() {
     </ProtectedRoute>
   );
 }
+
+
+
+

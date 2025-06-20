@@ -22,6 +22,15 @@ interface AuthContextType {
   checkAuth: () => Promise<boolean>;
 }
 
+// Add these new interfaces for API responses
+interface ProfileResponse {
+  user: User;
+}
+
+interface LoginResponse {
+  token: string;
+}
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -43,17 +52,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const checkAuth = async (): Promise<boolean> => {
     try {
       const storedToken = localStorage.getItem("token");
-      
+
       if (!storedToken) {
         return false;
       }
 
       // Validate token with the backend
-      const response = await axios.get("http://localhost:5000/api/profile", {
+      const response = await axios.get<ProfileResponse>("http://localhost:5000/api/profile", {
         headers: { Authorization: `Bearer ${storedToken}` },
       });
 
-      if (response.data && response.data.user) {
+      if (response.data.user) {
         setUser(response.data.user);
         setToken(storedToken);
         return true;
@@ -78,27 +87,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      const response = await axios.post("http://localhost:5000/api/auth/login", {
+      const response = await axios.post<LoginResponse>("http://localhost:5000/api/auth/login", {
         email,
         password,
       });
 
-      const { token } = response.data;
-      
+      const { token: newToken } = response.data;
+
       // Store token in localStorage
-      localStorage.setItem("token", token);
-      
+      localStorage.setItem("token", newToken);
+
       // Fetch user profile with the token
-      const profileResponse = await axios.get("http://localhost:5000/api/profile", {
-        headers: { Authorization: `Bearer ${token}` },
+      const profileResponse = await axios.get<ProfileResponse>("http://localhost:5000/api/profile", {
+        headers: { Authorization: `Bearer ${newToken}` },
       });
-      
+
       const userData = profileResponse.data.user;
-      
+
       // Store user data
       setUser(userData);
-      setToken(token);
-      
+      setToken(newToken);
+
       // Redirect to main page
       router.push("/main");
     } catch (error) {
@@ -154,10 +163,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 }

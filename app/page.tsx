@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from "framer-motion";
 import {
   MapPin,
@@ -26,6 +27,7 @@ import Link from "next/link";
 import Chatbot from "@/app/chatbot/page";
 import SignIn from "@/app/SignIn/page";
 import Login from "@/app/LogIn/page";
+import CityPhotos from '@/components/CityPhotos';
 
 // Interface for Destination Data
 interface DestinationData {
@@ -49,6 +51,7 @@ interface Testimonial {
 }
 
 export default function LandingPage() {
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [destination, setDestination] = useState("");
@@ -57,6 +60,43 @@ export default function LandingPage() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   const { isAuthenticated } = useAuth();
+
+  // Add this function to handle protected actions
+  const handleProtectedAction = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      router.push('/SignIn');
+      return;
+    }
+    router.push('/customize-plan');
+  };
+
+  // Add these handler functions at the top of your component
+  const handleProtectedNavigation = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      router.push('/SignIn');
+      return;
+    }
+    router.push(path);
+  };
+
+  const handleDestinationSelect = (dest: string) => {
+    if (!isAuthenticated) {
+      router.push('/SignIn');
+      return;
+    }
+    setDestination(dest);
+    setSelectedDestination(destinationsData[dest]);
+    setShowPlanDiagram(true);
+
+    setTimeout(() => {
+      const diagramSection = document.getElementById("plan-diagram");
+      if (diagramSection) {
+        diagramSection.scrollIntoView({ behavior: "smooth" });
+      }
+    }, 500);
+  };
 
   // Destinations Data
   const destinationsData: Record<string, DestinationData> = {
@@ -144,20 +184,6 @@ export default function LandingPage() {
     },
   ];
 
-  // Handle Destination Select
-  const handleDestinationSelect = (dest: string) => {
-    setDestination(dest);
-    setSelectedDestination(destinationsData[dest]);
-    setShowPlanDiagram(true);
-
-    setTimeout(() => {
-      const diagramSection = document.getElementById("plan-diagram");
-      if (diagramSection) {
-        diagramSection.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 500);
-  };
-
   // Scroll Effect
   useEffect(() => {
     const handleScroll = () => {
@@ -165,7 +191,7 @@ export default function LandingPage() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, []); // Removed the duplicate handleDestinationSelect function
 
   // Testimonial Carousel Effect
   useEffect(() => {
@@ -202,11 +228,26 @@ export default function LandingPage() {
             <a href="#pricing" className="font-medium hover:text-primary transition-colors">
               Pricing
             </a>
-            <Link href="/gamification" className="font-medium hover:text-primary transition-colors">
+            <Link
+              href="/gamification"
+              onClick={(e) => handleProtectedNavigation(e, '/gamification')}
+              className="font-medium hover:text-primary transition-colors"
+            >
               Rewards
             </Link>
-            <Link href="/game" className="font-medium hover:text-primary transition-colors">
+            <Link
+              href="/game"
+              onClick={(e) => handleProtectedNavigation(e, '/game')}
+              className="font-medium hover:text-primary transition-colors"
+            >
               Play Game
+            </Link>
+            <Link
+              href="/reviews"
+              onClick={(e) => handleProtectedNavigation(e, '/reviews')}
+              className="font-medium hover:text-primary transition-colors"
+            >
+              Reviews
             </Link>
           </nav>
 
@@ -322,6 +363,13 @@ export default function LandingPage() {
                 >
                   Play Game
                 </Link>
+                <Link
+                  href="/reviews"
+                  className="font-medium py-2 hover:text-primary transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Reviews
+                </Link>
               </div>
             </motion.div>
           )}
@@ -340,7 +388,11 @@ export default function LandingPage() {
             >
               <Badge className="mb-4">AI-Powered Travel Planning</Badge>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Your Perfect Trip, <span className="text-primary">Planned by AI</span>
+                Your Perfect Trip
+                <br />
+                <span className="text-primary">
+                  Planned By AI
+                </span>
               </h1>
               <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-lg">
                 Let our advanced AI create personalized travel itineraries tailored to your preferences, budget, and travel style.
@@ -367,7 +419,7 @@ export default function LandingPage() {
                       }
                     }}
                   >
-                    Plan Now <ChevronRight className="ml-2 h-4 w-4" />
+                    Plan <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
 
@@ -415,7 +467,10 @@ export default function LandingPage() {
 
                     {/* Activity Links */}
                     <div className="space-y-3">
-                      <Link href={`/flight?destination=${destination}`}>
+                      <Link
+                        href={`/flight?destination=${destination}`}
+                        onClick={(e) => handleProtectedNavigation(e, `/flight?destination=${destination}`)}
+                      >
                         <motion.div
                           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                           whileHover={{ x: 5 }}
@@ -430,7 +485,10 @@ export default function LandingPage() {
                         </motion.div>
                       </Link>
 
-                      <Link href={`/hotel?destination=${destination}`}>
+                      <Link
+                        href={`/hotels?destination=${destination}`}
+                        onClick={(e) => handleProtectedNavigation(e, `/hotels?destination=${destination}`)}
+                      >
                         <motion.div
                           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                           whileHover={{ x: 5 }}
@@ -447,7 +505,10 @@ export default function LandingPage() {
                         </motion.div>
                       </Link>
 
-                      <Link href={`/atrraction?destination=${destination}`}>
+                      <Link
+                        href={`/restaurants?destination=${destination}`}
+                        onClick={(e) => handleProtectedNavigation(e, `/restaurants?destination=${destination}`)}
+                      >
                         <motion.div
                           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                           whileHover={{ x: 5 }}
@@ -464,7 +525,10 @@ export default function LandingPage() {
                         </motion.div>
                       </Link>
 
-                      <Link href={`/attractions?destination=${destination}`}>
+                      <Link
+                        href={`/attraction?destination=${destination}`}
+                        onClick={(e) => handleProtectedNavigation(e, `/attraction?destination=${destination}`)}
+                      >
                         <motion.div
                           className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
                           whileHover={{ x: 5 }}
@@ -472,9 +536,12 @@ export default function LandingPage() {
                           <div className="bg-purple-100 p-2 rounded-full">
                             <Camera className="h-4 w-4 text-purple-600" />
                           </div>
-                          <div>
+                          <div className="flex-grow">
                             <p className="text-sm font-medium">Popular Attractions</p>
                             <p className="text-xs text-gray-500">Top-rated experiences</p>
+                          </div>
+                          <div className="w-24 h-24 relative rounded-lg overflow-hidden">
+                            <CityPhotos destination={destination} />
                           </div>
                         </motion.div>
                       </Link>
@@ -488,12 +555,12 @@ export default function LandingPage() {
                           <p className="font-bold">{selectedDestination?.budget || "$2,000 - $3,500"}</p>
                         </div>
                         <Link href="/customize-plan" passHref>
-                          <Button size="sm">View & Customize Plan</Button>
+                          <Button size="sm" onClick={(e) => handleProtectedAction(e)}>View & Customize Plan</Button>
                         </Link>
                       </div>
                     </div>
                     <Link href="/customize-plan" passHref>
-                      <Button className="mt-4 w-full">
+                      <Button className="mt-4 w-full" onClick={(e) => handleProtectedAction(e)}>
                         Customize This Plan <ChevronRight className="ml-2 h-4 w-4" />
                       </Button>
                     </Link>
@@ -526,10 +593,9 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="mb-4">Features</Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Smart Travel Planning with AI</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Intelligent Travel Planning & Safety</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our AI-powered platform takes the stress out of travel planning with intelligent features designed to
-              create your perfect trip.
+              Our platform combines AI-powered planning with real-time safety information, hotel search, and customizable itineraries to create your perfect trip with peace of mind.
             </p>
           </div>
 
@@ -550,24 +616,24 @@ export default function LandingPage() {
           >
             {[
               {
-                icon: <Globe className="h-10 w-10 text-primary" />,
-                title: "AI-Powered Recommendations",
-                description: "Our advanced AI analyzes thousands of destinations to match your preferences perfectly.",
-              },
-              {
-                icon: <Calendar className="h-10 w-10 text-primary" />,
-                title: "Smart Itinerary Building",
-                description: "Create detailed day-by-day plans that optimize your time and include hidden gems.",
+                icon: <MessageSquare className="h-10 w-10 text-primary" />,
+                title: "AI Travel Assistant",
+                description: "Chat with our intelligent assistant to get personalized travel advice and crisis alerts for your destination.",
               },
               {
                 icon: <Hotel className="h-10 w-10 text-primary" />,
-                title: "Accommodation Matching",
-                description: "Find the perfect places to stay based on your budget, style, and location preferences.",
+                title: "Hotel Search",
+                description: "Browse authentic hotel listings with real photos and reviews from Booking.com to find your perfect accommodation.",
               },
               {
-                icon: <Utensils className="h-10 w-10 text-primary" />,
-                title: "Dining Recommendations",
-                description: "Discover local cuisine and restaurants tailored to your dietary needs and taste.",
+                icon: <Compass className="h-10 w-10 text-primary" />,
+                title: "Customizable Plans",
+                description: "Create your ideal trip by selecting destinations, activities, accommodation types, and transportation preferences.",
+              },
+              {
+                icon: <Globe className="h-10 w-10 text-primary" />,
+                title: "Multi-Model AI",
+                description: "Our platform leverages multiple AI models to ensure you always get the best responses even during service disruptions.",
               },
             ].map((feature, index) => (
               <motion.div
@@ -601,7 +667,7 @@ export default function LandingPage() {
             <Badge className="mb-4">How It Works</Badge>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Plan Your Trip in 3 Simple Steps</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Our AI makes travel planning effortless. Just tell us what you like, and we'll handle the rest.
+              Our platform makes travel planning effortless with AI assistance, customizable options, and real-time safety information.
             </p>
           </div>
 
@@ -609,18 +675,18 @@ export default function LandingPage() {
             {[
               {
                 step: 1,
-                title: "Share Your Preferences",
-                description: "Tell us about your travel style, interests, budget, and any specific requirements you have.",
+                title: "Customize Your Trip",
+                description: "Use our step-by-step customization tool to select your destination, duration, budget, accommodation, transportation, and activities.",
               },
               {
                 step: 2,
-                title: "AI Creates Your Itinerary",
-                description: "Our AI analyzes thousands of options to create a personalized travel plan just for you.",
+                title: "Get AI-Generated Plans",
+                description: "Our AI assistant processes your preferences and generates a detailed travel plan with crisis alerts and safety information.",
               },
               {
                 step: 3,
-                title: "Customize & Book",
-                description: "Review your plan, make any adjustments, and book all your reservations in one place.",
+                title: "Explore & Book",
+                description: "Browse hotels with authentic photos, check reviews, and get real-time information about your destination through our chatbot.",
               },
             ].map((step, index) => (
               <motion.div
@@ -788,7 +854,11 @@ export default function LandingPage() {
                   ))}
                 </ul>
 
-                <Button className="w-full" variant={plan.variant as "default" | "outline"}>
+                <Button
+                  onClick={(e) => handleProtectedNavigation(e, plan.buttonText === "Get Started" ? `/pricing/${plan.title.toLowerCase()}` : '/contact')}
+                  className="w-full"
+                  variant={plan.variant as "default" | "outline"}
+                >
                   {plan.buttonText}
                 </Button>
               </motion.div>
@@ -813,7 +883,7 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button size="lg" variant="secondary">
+              <Button size="lg" variant="default">
                 Start Planning for Free
               </Button>
               <Button size="lg" variant="outline" className="bg-transparent text-black border-black hover:bg-white/10">

@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@import "tailwindcss/preflight";
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
 
 @layer base {
   :root {
@@ -49,10 +51,15 @@
 
 @layer base {
   * {
-    @apply border-[hsl(var(--border))];
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
+}
+
+.neon-glow {
+  text-shadow: 0 0 8px #00ffff, 0 0 12px #00ffff, 0 0 16px #00ffff;
 }

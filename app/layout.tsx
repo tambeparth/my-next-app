@@ -4,6 +4,8 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { UserProvider } from "@/app/Context/UserContext"
 import { AuthProvider } from "@/context/AuthContext"
+import GoogleMapsScript from "@/components/GoogleMapsScript"
+import SuppressHydrationWarning from "@/components/SuppressHydrationWarning"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,23 +17,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 })
 
-export const metadata: Metadata = {
-  title: "Smart AI Trip Planner",
-  description: "Plan your trips and earn rewards!",
-}
-
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>
         <AuthProvider>
-          <UserProvider>{children}</UserProvider>
+          <UserProvider>
+            <SuppressHydrationWarning>
+              {children}
+            </SuppressHydrationWarning>
+          </UserProvider>
         </AuthProvider>
       </body>
     </html>
   )
 }
+

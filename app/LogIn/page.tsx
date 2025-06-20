@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 import Link from "next/link";
 import axios from "axios";
 
@@ -18,6 +19,14 @@ interface FormData {
 
 const Login = () => {
     const router = useRouter();
+    const { isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push('/main');
+        }
+    }, [isAuthenticated, router]);
+
     const [formData, setFormData] = useState<FormData>({
         email: "",
         password: "",
@@ -33,14 +42,7 @@ const Login = () => {
         });
     };
 
-    const { login, isAuthenticated } = useAuth();
-
-    // Redirect if already authenticated
-    useEffect(() => {
-        if (isAuthenticated) {
-            router.push("/main");
-        }
-    }, [isAuthenticated, router]);
+    const { login } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -135,7 +137,7 @@ const Login = () => {
 
                     <div className="flex items-center justify-between">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                            className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
                             type="submit"
                             disabled={loading}
                         >

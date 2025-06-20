@@ -1,11 +1,20 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
+import { useAuth } from '@/context/AuthContext';
 
 const Register = () => {
     const router = useRouter();
+    const { isAuthenticated } = useAuth();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.push('/main');
+        }
+    }, [isAuthenticated, router]);
+
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -129,7 +138,7 @@ const Register = () => {
 
                     <div className="flex items-center justify-between">
                         <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
+                            className="bg-black hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
                             type="submit"
                             disabled={loading}
                         >

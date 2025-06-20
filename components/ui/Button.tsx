@@ -1,36 +1,44 @@
-import * as React from "react";
-import { cn } from "@/lib/utils";
+'use client'
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    variant?: "default" | "outline" | "secondary" | "danger" | "success" | "ghost";
-    size?: "default" | "sm" | "lg" | "xl";
+import { forwardRef } from 'react'
+import { cn } from '@/lib/utils'
+
+export interface ButtonProps
+    extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    variant?: 'default' | 'outline' | 'ghost'
+    size?: 'sm' | 'md' | 'lg'
 }
 
-export function Button({
-    className,
-    variant = "default",
-    size = "default",
-    ...props
-}: ButtonProps) {
-    return (
-        <button
-            className={cn(
-                "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none ring-offset-background",
-                // Variants
-                variant === "default" && "bg-black text-white hover:bg-blue-500",
-                variant === "outline" && "border border-gray-300 text-gray-700 hover:bg-gray-100",
-                variant === "secondary" && "bg-gray-200 text-gray-800 hover:bg-gray-300",
-                variant === "danger" && "bg-red-600 text-white hover:bg-red-500",
-                variant === "success" && "bg-green-600 text-white hover:bg-green-500",
-                variant === "ghost" && "text-gray-700 hover:bg-gray-100",
-                // Sizes
-                size === "default" && "h-10 px-4 py-2",
-                size === "sm" && "h-8 px-3 text-xs",
-                size === "lg" && "h-12 px-6 text-lg",
-                size === "xl" && "h-14 px-8 text-xl",
-                className
-            )}
-            {...props}
-        />
-    );
-}
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+    ({ className, variant = 'default', size = 'md', ...props }, ref) => {
+        return (
+            <button
+                className={cn(
+                    'inline-flex items-center justify-center font-medium leading-none', // added leading-none for perfect alignment
+                    'focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-1',
+                    'disabled:opacity-50 disabled:cursor-not-allowed',
+                    'transition-all duration-200',
+                    'rounded-lg', // changed from rounded-md to rounded-lg for slightly more rounding
+                    {
+                        // Black and white variants
+                        'bg-black text-white hover:bg-gray-800': variant === 'default',
+                        'border border-gray-200 bg-white text-gray-900 hover:bg-gray-50': variant === 'outline',
+                        'bg-transparent text-gray-900 hover:bg-gray-100': variant === 'ghost',
+                    },
+                    {
+                        // Size values with improved vertical alignment
+                        'h-10 px-3 text-sm [&>svg]:h-3.5 [&>svg]:w-3.5': size === 'sm', // 32px height
+                        'h-10 px-4 text-base [&>svg]:h-4 [&>svg]:w-4': size === 'md',   // 36px height
+                        'h-10 px-5 text-lg [&>svg]:h-5 [&>svg]:w-5': size === 'lg',    // 40px height
+                    },
+                    className
+                )}
+                ref={ref}
+                {...props}
+            />
+        )
+    }
+)
+Button.displayName = 'Button'
+
+export { Button }
