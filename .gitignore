@@ -5,6 +5,7 @@
 /node_modules
 /.pnp
 .pnp.*
+.pnp.js
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -37,6 +38,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.env*.local
 
 # vercel
 .vercel
@@ -44,4 +46,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-

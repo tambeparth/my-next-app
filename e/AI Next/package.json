@@ -1,0 +1,11 @@
+// <<<<<<< HEAD
+// "dependencies": {
+//     "@googlemaps/js-api-loader": "^1.16.8",
+//     "axios": "^0.27.2",
+//     "framer-motion": "^12.4.10",
+//   ...
+// =======
+// "dependencies": {
+//         "next": "^13.4.19",
+//         "react": "^18.2.0"
+// >>>>>>> main

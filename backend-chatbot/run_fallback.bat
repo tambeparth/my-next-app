@@ -1,0 +1,3 @@
+@echo off
+echo Starting Yatra Sevak.AI Fallback Backend on port 8000...
+uvicorn fallback_main:app --host 0.0.0.0 --port 8000
