@@ -160,7 +160,7 @@ export interface HotelQuestionsResponse {
 
 // API configuration
 const API_BASE_URL = 'https://booking-com15.p.rapidapi.com/api/v1/hotels';
-const API_KEY = process.env.NEXT_PUBLIC_HOTEL_API_KEY || '43f4d26f35mshce7092ec3b58911p1dd88bjsneeb2ab5758d7';
+const API_KEY = process.env.NEXT_PUBLIC_HOTEL_API_KEY || '';
 const API_HOST = process.env.NEXT_PUBLIC_HOTEL_API_HOST || 'booking-com15.p.rapidapi.com';
 
 // Rate limiting

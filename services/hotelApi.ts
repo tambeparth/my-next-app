@@ -89,7 +89,7 @@ console.log('API Host:', process.env.NEXT_PUBLIC_HOTEL_API_HOST ? 'Set (value: '
 const api = axios.create({
     baseURL: 'https://booking-com15.p.rapidapi.com/api/v1',
     headers: {
-        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_HOTEL_API_KEY || '43f4d26f35mshce7092ec3b58911p1dd88bjsneeb2ab5758d7',
+        'X-RapidAPI-Key': process.env.NEXT_PUBLIC_HOTEL_API_KEY || '',
         'X-RapidAPI-Host': process.env.NEXT_PUBLIC_HOTEL_API_HOST || 'booking-com15.p.rapidapi.com',
     },
 });

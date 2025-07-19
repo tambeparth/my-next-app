@@ -39,6 +39,8 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 .env*.local
+**/.env
+**/.env.local
 
 # vercel
 .vercel
@@ -46,3 +48,43 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Batch files for local development
+*.bat
+
+# Duplicate root level files (keep only my-next-app version)
+/app/
+/components/
+/context/
+/data/
+/lib/
+/pages/
+/public/
+/services/
+/types/
+/utils/
+/eslint.config.mjs
+/middleware.ts
+/next.config.js
+/next.config.ts
+/package.json
+/package-lock.json
+/postcss.config.mjs
+/tailwind.config.js
+/tsconfig.json
+/types.ts
+
+# Backend folder (old version)
+/backend/
