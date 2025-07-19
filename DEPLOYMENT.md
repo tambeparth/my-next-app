@@ -1,5 +1,13 @@
 # 🚀 DEPLOYMENT GUIDE - AI Travel Project
 
+## 🚀 Quick Deploy to Vercel
+
+### Deploy Backend
+[![Deploy Backend to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tambeparth/my-next-app&root-directory=backend-v2&env=MONGO_URI,JWT_SECRET,PORT&project-name=ai-travel-backend)
+
+### Deploy Frontend
+[![Deploy Frontend to Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/tambeparth/my-next-app&root-directory=my-next-app&env=NEXT_PUBLIC_API_URL,NEXT_PUBLIC_HOTEL_API_KEY,NEXT_PUBLIC_HOTEL_API_HOST&project-name=ai-travel-frontend)
+
 ## 🚨 CRITICAL: Folder Structure Issues Fixed
 
 ### **Problem Identified:**
