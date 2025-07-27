@@ -183,7 +183,7 @@ git push origin main
    ```
 6. **Add Environment Variables:**
    ```
-   MONGO_URI = mongodb+srv://smartai:iCxqsRLymrAg1RWS@cluster0.luvd1.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster0
+   MONGO_URI = your_mongodb_connection_string_here
    JWT_SECRET = your_secure_jwt_secret_here
    PORT = 5000
    ```
